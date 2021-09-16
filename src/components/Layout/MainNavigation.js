@@ -2,8 +2,6 @@ import { useContext } from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "../../store/auth-context";
 
-import classes from "./MainNavigation.module.css";
-
 const MainNavigation = () => {
   const authCtx = useContext(AuthContext);
 
@@ -14,28 +12,23 @@ const MainNavigation = () => {
   };
 
   return (
-    <header className={classes.header}>
-      <Link to="/">
-        <div className={classes.logo}>React Auth</div>
-      </Link>
-      <nav>
-        <ul>
+    <header>
+      <nav class="bg-white shadow dark:bg-gray-800">
+        <div class="container flex items-center justify-center p-6 mx-auto text-gray-600 capitalize dark:text-gray-300">
+          <Link class="text-gray-800 dark:text-gray-200 border-b-2 border-blue-500 mx-1.5 sm:mx-6" to="/">
+            <div>React Auth</div>
+          </Link>
+
           {!isLoggedIn && (
-            <li>
-              <Link to="/auth">Login</Link>
-            </li>
+            <Link class="text-gray-800 dark:text-gray-200 border-b-2 mx-1.5 sm:mx-6" to="/auth">Login</Link>
           )}
           {isLoggedIn && (
-            <li>
-              <Link to="/profile">Profile</Link>
-            </li>
+            <Link class="text-gray-800 dark:text-gray-200 border-b-2 mx-1.5 sm:mx-6" to="/profile">Units</Link>
           )}
           {isLoggedIn && (
-            <li>
-              <button onClick={logoutHandler}>Logout</button>
-            </li>
+            <button class="text-gray-800 dark:text-gray-200 border-b-2 mx-1.5 sm:mx-6" onClick={logoutHandler}>Logout</button>
           )}
-        </ul>
+        </div>
       </nav>
     </header>
   );

@@ -1,4 +1,3 @@
-import classes from "./Profiles.module.css";
 import { useCallback, useEffect, useState, useRef } from "react";
 import Modal from "../UI/Modal";
 
@@ -106,44 +105,40 @@ const UserProfile = () => {
     <div>
       {unitIsShown && (
         <Modal onClose={hideModal}>
-          <h2 className={classes.unitTitle}>
+          <h2>
             Enter the name and abbreviation of a unit
           </h2>
-          <form onSubmit={addHandler} className={classes.form}>
+          <form onSubmit={addHandler}>
             <label htmlFor="shortname">Shortname</label>
             <input type="text" id="shortname" ref={shortnameInputRef} />
             <label htmlFor="name">Name</label>
             <input type="text" id="name" ref={nameInputRef} />
-            <button className={classes.add}>Add</button>
+            <button>Add</button>
           </form>
-          <button className={classes.closeButton} onClick={hideModal}>
+          <button onClick={hideModal}>
             Close
           </button>
         </Modal>
       )}
-      <button
-        className={`${classes.addButton} ${classes.add}`}
-        onClick={showModal}
-      >
-        +
-      </button>
-      <table className={classes.units}>
-        <thead>
+      <table class="p-6 max-w-sm mx-auto bg-white shadow-md">
+        <thead class="bg-gray-50">
           <tr>
-            <th>Shortname</th>
-            <th>Name</th>
-            <th></th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Shortname</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <button class="" onClick={showModal} > + </button>
+            </th>
           </tr>
         </thead>
-        <tbody>
+        <tbody class="bg-white divide-y divide-gray-200">
           {units.map((unit) => {
             return (
               <tr key={unit.shortname}>
-                <td>{unit.shortname}</td>
-                <td>{unit.name}</td>
-                <td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{unit.shortname}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{unit.name}</td>
+                <td class="rounded-tr-lg px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   <button
-                    className={classes.deleteButton}
+                    class=""
                     onClick={() => deleteRow(unit.shortname)}
                   >
                     ❌
