@@ -2,37 +2,23 @@
 import { useEffect, useState, useRef, useContext } from "react";
 import Modal from "../UI/Modal";
 import Table from "../UI/Table";
-import UnitContext from "../../store/unit-context";
+import { useUnits, deleteUnit } from "../../store/unit-hooks";
 
 const Units = () => {
   const [unitIsShown, setUnitIsShown] = useState(false);
-  const [units, setUnits] = useState([]);
-  const [dataUpdated, setDataUpdated] = useState(false);
+  const [isUpdated, setIsUpdated] = useState(false);
+  const units = useUnits(isUpdated);
 
   const shortnameInputRef = useRef();
   const nameInputRef = useRef();
 
-  const unitCtx = useContext(UnitContext);
-
   const addUnit = async (unit) => {
     await unitCtx.addUnit("units/", unit);
-    setDataUpdated(false);
   };
 
-  const deleteUnit = async (shortname) => {
-    await unitCtx.deleteUnit("units/", { shortname: shortname });
-    setDataUpdated(false);
+  const remove = (shortname) => {
+    deleteUnit({ shortname: shortname }).then(()=>setIsUpdated(!isUpdated));
   };
-
-  useEffect(() => {
-    const getUnits = async () => {
-      await unitCtx.getUnits("units/");
-      setDataUpdated(true);
-      setUnits(unitCtx.units);
-    };
-
-    getUnits();
-  }, [dataUpdated]);
 
   const showModal = () => {
     setUnitIsShown(true);
@@ -126,7 +112,7 @@ const Units = () => {
         tableHeaders={["shortname", "name"]}
         addRow={showModal}
         data={units}
-        deleteRow={deleteUnit}
+        deleteRow={remove}
       />
     </div>
   );

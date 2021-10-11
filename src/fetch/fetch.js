@@ -24,10 +24,20 @@ export const GET = async (url) => {
   return response;
 };
 
+export const GETv2 = (url, success, error) => {
+  return fetch(apiBaseUrl + url, {
+    headers: { Authorization: "access_token " + token },
+  });
+};
+
 export const POST = async (url, body) => {
   return await METHOD(url, body, "POST");
 };
 
 export const DELETE = async (url, body) => {
   return await METHOD(url, body, "DELETE");
+};
+
+export const DELETEv2 = (url, body) => {
+  return METHOD(url, body, "DELETE");
 };
