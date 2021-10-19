@@ -2,7 +2,10 @@ import { useContext } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 
 import Layout from "./components/Layout/Layout";
-import UserProfile from "./components/Profile/UserProfile";
+import UnitsPage from "./pages/UnitsPage";
+import NutritionalValuePage from "./pages/NutritionalValuePage";
+import ProductsPage from "./pages/ProductsPage";
+import RecipesPage from "./pages/RecipesPage";
 import AuthPage from "./pages/AuthPage";
 import HomePage from "./pages/HomePage";
 import AuthContext from "./store/auth-context";
@@ -22,8 +25,23 @@ function App() {
           </Route>
         )}
         {authCtx.isLoggedIn && (
-          <Route path="/profile">
-            <UserProfile />
+          <Route path="/units">
+            <UnitsPage />
+          </Route>
+        )}
+        {authCtx.isLoggedIn && (
+          <Route path="/nutritional-value">
+            <NutritionalValuePage />
+          </Route>
+        )}
+        {authCtx.isLoggedIn && (
+          <Route path="/products">
+            <ProductsPage />
+          </Route>
+        )}
+        {authCtx.isLoggedIn && (
+          <Route path="/recipes">
+            <RecipesPage />
           </Route>
         )}
         <Route path="*">

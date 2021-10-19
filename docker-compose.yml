@@ -18,5 +18,4 @@ services:
       - python
 networks:
   python:
-    external:
-      name: python
+    name: python

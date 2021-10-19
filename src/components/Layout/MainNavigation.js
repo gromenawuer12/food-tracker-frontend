@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import AuthContext from "../../store/auth-context";
 
 const MainNavigation = () => {
@@ -13,20 +13,69 @@ const MainNavigation = () => {
 
   return (
     <header>
-      <nav class="bg-white shadow dark:bg-gray-800">
-        <div class="container flex items-center justify-center p-6 mx-auto text-gray-600 capitalize dark:text-gray-300">
-          <Link class="text-gray-800 dark:text-gray-200 border-b-2 border-blue-500 mx-1.5 sm:mx-6" to="/">
-            <div>React Auth</div>
-          </Link>
+      <nav className="bg-white shadow dark:bg-gray-800">
+        <div className="container flex items-center justify-center p-6 mx-auto text-gray-600 capitalize dark:text-gray-300">
+          <NavLink
+            activeClassName="border-blue-500"
+            className="text-gray-800 dark:text-gray-200 border-b-2 mx-1.5 sm:mx-6"
+            to="/"
+            exact
+          >
+            Home
+          </NavLink>
 
           {!isLoggedIn && (
-            <Link class="text-gray-800 dark:text-gray-200 border-b-2 mx-1.5 sm:mx-6" to="/auth">Login</Link>
+            <NavLink
+              activeClassName="border-blue-500"
+              className="text-gray-800 dark:text-gray-200 border-b-2 mx-1.5 sm:mx-6"
+              to="/auth"
+            >
+              Login
+            </NavLink>
           )}
           {isLoggedIn && (
-            <Link class="text-gray-800 dark:text-gray-200 border-b-2 mx-1.5 sm:mx-6" to="/profile">Units</Link>
+            <NavLink
+              activeClassName="border-blue-500"
+              className="text-gray-800 dark:text-gray-200 border-b-2 mx-1.5 sm:mx-6"
+              to="/units"
+            >
+              Units
+            </NavLink>
           )}
           {isLoggedIn && (
-            <button class="text-gray-800 dark:text-gray-200 border-b-2 mx-1.5 sm:mx-6" onClick={logoutHandler}>Logout</button>
+            <NavLink
+              activeClassName="border-blue-500"
+              className="text-gray-800 dark:text-gray-200 border-b-2 mx-1.5 sm:mx-6"
+              to="/nutritional-value"
+            >
+              Nutritional Value
+            </NavLink>
+          )}
+          {isLoggedIn && (
+            <NavLink
+              activeClassName="border-blue-500"
+              className="text-gray-800 dark:text-gray-200 border-b-2 mx-1.5 sm:mx-6"
+              to="/products"
+            >
+              Product
+            </NavLink>
+          )}
+          {isLoggedIn && (
+            <NavLink
+              activeClassName="border-blue-500"
+              className="text-gray-800 dark:text-gray-200 border-b-2 mx-1.5 sm:mx-6"
+              to="/recipes"
+            >
+              Recipe
+            </NavLink>
+          )}
+          {isLoggedIn && (
+            <button
+              className="text-gray-800 dark:text-gray-200 border-b-2 mx-1.5 sm:mx-6"
+              onClick={logoutHandler}
+            >
+              Logout
+            </button>
           )}
         </div>
       </nav>
