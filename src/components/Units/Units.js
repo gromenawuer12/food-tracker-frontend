@@ -1,45 +1,31 @@
 /* eslint-disable */
-import { useEffect, useState, useRef, useContext } from "react";
+import { useState, useRef } from "react";
 import Modal from "../UI/Modal";
 import Table from "../UI/Table";
-import UnitContext from "../../store/unit-context";
+import { useUnits, deleteUnit, addUnit } from "../../hooks/use-units";
 
 const Units = () => {
-  const [unitIsShown, setUnitIsShown] = useState(false);
-  const [units, setUnits] = useState([]);
-  const [dataUpdated, setDataUpdated] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isUpdated, setIsUpdated] = useState(false);
+  const units = useUnits(isUpdated);
 
   const shortnameInputRef = useRef();
   const nameInputRef = useRef();
 
-  const unitCtx = useContext(UnitContext);
-
-  const addUnit = async (unit) => {
-    await unitCtx.addUnit("units/", unit);
-    setDataUpdated(false);
+  const addUnits = async (unit) => {
+    addUnit(unit).then(() => setIsUpdated(!isUpdated));
   };
 
-  const deleteUnit = async (shortname) => {
-    await unitCtx.deleteUnit("units/", { shortname: shortname });
-    setDataUpdated(false);
+  const deleteUnits = async (shortname) => {
+    deleteUnit({ shortname: shortname }).then(() => setIsUpdated(!isUpdated));
   };
-
-  useEffect(() => {
-    const getUnits = async () => {
-      await unitCtx.getUnits("units/");
-      setDataUpdated(true);
-      setUnits(unitCtx.units);
-    };
-
-    getUnits();
-  }, [dataUpdated]);
 
   const showModal = () => {
-    setUnitIsShown(true);
+    setIsModalVisible(true);
   };
 
   const hideModal = () => {
-    setUnitIsShown(false);
+    setIsModalVisible(false);
   };
 
   const addHandler = (event) => {
@@ -48,7 +34,7 @@ const Units = () => {
     const enteredShortname = shortnameInputRef.current.value;
     const enteredName = nameInputRef.current.value;
 
-    addUnit({ shortname: enteredShortname, name: enteredName });
+    addUnits({ shortname: enteredShortname, name: enteredName });
     hideModal();
   };
 
@@ -121,12 +107,12 @@ const Units = () => {
 
   return (
     <div>
-      {modal(unitIsShown)}
+      {modal(isModalVisible)}
       <Table
         tableHeaders={["shortname", "name"]}
         addRow={showModal}
         data={units}
-        deleteRow={deleteUnit}
+        deleteRow={deleteUnits}
       />
     </div>
   );

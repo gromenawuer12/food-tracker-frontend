@@ -19,17 +19,30 @@ const Table = (props) => {
           return (
             <tr key={dt.name}>
               {tableHeaders.map((th) => {
-                if (th === "nutritional value") {
-                  return productsFix(dt["nutritional_value"], 0);
+                if (props.products) {
+                  if (th === "nutritional value") {
+                    return productsFix(dt["nutritional_value"], 0);
+                  }
+                  if (th === "units") {
+                    return productsFix(dt["nutritional_value"], 1);
+                  }
+                  if (th === "quantity") {
+                    return productsFix(dt["nutritional_value"], 2);
+                  }
+                  if (th === "supermarket") {
+                    return productSupermarketFix(dt[th]);
+                  }
                 }
-                if (th === "units") {
-                  return productsFix(dt["nutritional_value"], 1);
-                }
-                if (th === "quantity") {
-                  return productsFix(dt["nutritional_value"], 2);
-                }
-                if (th === "supermarket") {
-                  return productSupermarketFix(dt[th]);
+                if (props.recipes) {
+                  if (th === "products") {
+                    return productsFix(dt["products"], 0);
+                  }
+                  if (th === "units") {
+                    return productsFix(dt["products"], 1);
+                  }
+                  if (th === "quantity") {
+                    return productsFix(dt["products"], 2);
+                  }
                 }
                 return (
                   <td
@@ -67,16 +80,14 @@ const Table = (props) => {
       : null;
     return tbody;
   };
-  const productsFix = (nutritional_value, index) => {
+  const productsFix = (column, index) => {
     return (
       <td
-        key={nutritional_value[index] + index.toString()}
+        key={column[index] + index.toString()}
         className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
       >
-        {nutritional_value.map((nv) => {
-          return nv.map((elem) => {
-            return <pre key={elem[index] + Math.random()}>{elem[index]}</pre>;
-          });
+        {column.map((elem) => {
+          return <pre key={elem[index] + Math.random()}>{elem[index]}</pre>;
         })}
       </td>
     );
@@ -88,9 +99,7 @@ const Table = (props) => {
         className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
       >
         {supermarkets.map((supermarket) => {
-          return supermarket.map((elem) => {
-            return <pre key={elem}>{elem}</pre>;
-          });
+          return <pre key={supermarket}>{supermarket}</pre>;
         })}
       </td>
     );

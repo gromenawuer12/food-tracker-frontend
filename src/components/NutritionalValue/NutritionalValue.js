@@ -1,49 +1,33 @@
-import { useEffect, useState, useRef, useContext } from "react";
+import { useState, useRef } from "react";
 import Modal from "../UI/Modal";
 import Table from "../UI/Table";
-import UnitContext from "../../store/unit-context";
-import NutritionalValueContext from "../../store/nutritional-value-context";
+import {
+  useNutritionalValue,
+  deleteNutritionalValue,
+  addNutritionalValue,
+} from "../../hooks/use-nutritional-value";
+import { useUnits } from "../../hooks/use-units";
 
 const NutritionalValue = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [nutritionalValue, setNutritionalValue] = useState([]);
-  const [dataUpdated, setDataUpdated] = useState(false);
+  const [isUpdated, setIsUpdated] = useState(false);
+
+  const nutritionalValue = useNutritionalValue(isUpdated);
+  const units = useUnits(true);
 
   const shortnameInputRef = useRef();
   const nameInputRef = useRef();
   const unitsInputRef = useRef();
 
-  const unitCtx = useContext(UnitContext);
-  const nutritionalValueCtx = useContext(NutritionalValueContext);
+  const addNutritionalValues = async (nutritionalValue) => {
+    addNutritionalValue(nutritionalValue).then(() => setIsUpdated(!isUpdated));
+  };
 
-  const addNutritionalValue = async (nutritionalValue) => {
-    await nutritionalValueCtx.addNutritionalValue(
-      "nutritional_value/",
-      nutritionalValue
+  const deleteNutritionalValues = async (shortname) => {
+    deleteNutritionalValue({ shortname: shortname }).then(() =>
+      setIsUpdated(!isUpdated)
     );
-    setDataUpdated(false);
   };
-
-  const deleteNutritionalValue = async (shortname) => {
-    await nutritionalValueCtx.deleteNutritionalValue("nutritional_value/", {
-      shortname: shortname,
-    });
-    setDataUpdated(false);
-  };
-
-  useEffect(() => {
-    if (!unitCtx.units) {
-      unitCtx.getUnits("units/");
-    }
-
-    const getNutritionalValue = async () => {
-      await nutritionalValueCtx.getNutritionalValue("nutritional_value/");
-      setDataUpdated(true);
-      setNutritionalValue(nutritionalValueCtx.nutritionalValue);
-    };
-
-    getNutritionalValue();
-  }, [dataUpdated]);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -60,7 +44,7 @@ const NutritionalValue = () => {
     const enteredName = nameInputRef.current.value;
     const enteredUnit = unitsInputRef.current.value;
 
-    addNutritionalValue({
+    addNutritionalValues({
       shortname: enteredShortname,
       name: enteredName,
       unit: enteredUnit,
@@ -132,8 +116,8 @@ const NutritionalValue = () => {
                 id="units"
                 ref={unitsInputRef}
               >
-                {unitCtx.units &&
-                  unitCtx.units.map((unit) => {
+                {units &&
+                  units.map((unit) => {
                     return (
                       <option key={unit.name} value={unit.shortname}>
                         {unit.name}
@@ -177,7 +161,7 @@ const NutritionalValue = () => {
         tableHeaders={["shortname", "name", "unit"]}
         addRow={showModal}
         data={nutritionalValue}
-        deleteRow={deleteNutritionalValue}
+        deleteRow={deleteNutritionalValues}
       />
     </div>
   );

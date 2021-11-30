@@ -5,6 +5,7 @@ import Layout from "./components/Layout/Layout";
 import UnitsPage from "./pages/UnitsPage";
 import NutritionalValuePage from "./pages/NutritionalValuePage";
 import ProductsPage from "./pages/ProductsPage";
+import RecipesPage from "./pages/RecipesPage";
 import AuthPage from "./pages/AuthPage";
 import HomePage from "./pages/HomePage";
 import AuthContext from "./store/auth-context";
@@ -36,6 +37,11 @@ function App() {
         {authCtx.isLoggedIn && (
           <Route path="/products">
             <ProductsPage />
+          </Route>
+        )}
+        {authCtx.isLoggedIn && (
+          <Route path="/recipes">
+            <RecipesPage />
           </Route>
         )}
         <Route path="*">

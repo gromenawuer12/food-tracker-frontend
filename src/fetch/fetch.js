@@ -2,8 +2,8 @@ const apiBaseUrl = "http://localhost:5000/";
 
 const token = localStorage.getItem("token");
 
-const METHOD = async (url, body, method) => {
-  const response = await fetch(apiBaseUrl + url, {
+const METHOD = (url, body, method) => {
+  return fetch(apiBaseUrl + url, {
     method: method,
     headers: {
       Authorization: "access_token " + token,
@@ -11,23 +11,18 @@ const METHOD = async (url, body, method) => {
     },
     body: JSON.stringify(body),
   });
-  return response;
 };
 
-export const GET = async (url) => {
-  const response = await fetch(apiBaseUrl + url, {
+export const GET = (url) => {
+  return fetch(apiBaseUrl + url, {
     headers: { Authorization: "access_token " + token },
   });
-
-  console.log("GET /" + url);
-
-  return response;
 };
 
-export const POST = async (url, body) => {
-  return await METHOD(url, body, "POST");
+export const POST = (url, body) => {
+  return METHOD(url, body, "POST");
 };
 
-export const DELETE = async (url, body) => {
-  return await METHOD(url, body, "DELETE");
+export const DELETE = (url, body) => {
+  return METHOD(url, body, "DELETE");
 };

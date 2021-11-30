@@ -1,34 +1,31 @@
 import { useState, useRef } from "react";
-import {
-  useProducts,
-  addProduct,
-  deleteProduct,
-} from "../../hooks/use-products";
-import { useNutritionalValue } from "../../hooks/use-nutritional-value";
 import Modal from "../UI/Modal";
 import Table from "../UI/Table";
+import { useRecipes, addRecipe, deleteRecipe } from "../../hooks/use-recipes";
+import { useProducts } from "../../hooks/use-products";
+import { useUnits } from "../../hooks/use-units";
 
-const Products = () => {
+const Recipes = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [products, setProducts] = useState([]);
   const [isUpdated, setIsUpdated] = useState(false);
   const [quantity, setQuantity] = useState(0);
-  const [nutritionalValue, setNutritionalValue] = useState([]);
 
-  const products = useProducts(isUpdated);
-  const nutritionalValueList = useNutritionalValue(true);
-
-  const descriptionInputRef = useRef();
   const nameInputRef = useRef();
-  const supermarketInputRef = useRef();
-  const nutritionalValueInputRef = useRef();
+  const productsInputRef = useRef();
   const quantityInputRef = useRef();
+  const unitsInputRef = useRef();
 
-  const addProducts = async (product) => {
-    addProduct(product).then(() => setIsUpdated(!isUpdated));
+  const recipes = useRecipes(isUpdated);
+  const productsList = useProducts(true);
+  const unitsList = useUnits(true);
+
+  const addRecipes = async (recipe) => {
+    addRecipe(recipe).then(() => setIsUpdated(!isUpdated));
   };
 
-  const deleteProducts = async (name) => {
-    deleteProduct({ name: name }).then(() => setIsUpdated(!isUpdated));
+  const deleteRecipes = async (name) => {
+    deleteRecipe({ name: name }).then(() => setIsUpdated(!isUpdated));
   };
 
   const showModal = () => {
@@ -37,39 +34,33 @@ const Products = () => {
 
   const hideModal = () => {
     setIsModalVisible(false);
-    setNutritionalValue([]);
+    setProducts([]);
   };
 
   const addHandler = (event) => {
     event.preventDefault();
 
     const enteredName = nameInputRef.current.value;
-    const enteredDescription = descriptionInputRef.current.value;
-    const enteredSupermarket = supermarketInputRef.current.value
-      .split("\n")
-      .filter((elem) => elem.trim() !== "");
-    const enteredNutritionalValue = nutritionalValue;
+    const enteredProducts = products;
 
-    addProducts({
+    addRecipes({
       name: enteredName,
-      description: enteredDescription,
-      supermarket: enteredSupermarket,
-      nutritional_value: enteredNutritionalValue,
+      products: enteredProducts,
     });
     hideModal();
   };
 
-  const addNutritionalValue = (event) => {
+  const addProducts = (event) => {
     event.preventDefault();
-    const aux = [...nutritionalValue];
-    aux.push(nutritionalValueInputRef.current.value.split(","));
-    setNutritionalValue(aux);
+    const aux = unitsInputRef.current.value.split(",");
+    aux.unshift(productsInputRef.current.value);
+    setProducts([...products, aux]);
   };
 
   const deleteNv = (index) => {
-    const aux = [...nutritionalValue];
+    const aux = [...products];
     aux.splice(index, 1);
-    setNutritionalValue(aux);
+    setProducts(aux);
   };
 
   const modal = (isModalVisible) => {
@@ -109,55 +100,60 @@ const Products = () => {
               id="name"
               ref={nameInputRef}
             />
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="description"
-            >
-              Description
-            </label>
-            <textarea
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              rows="5"
-              cols="30"
-              id="description"
-              ref={descriptionInputRef}
-            />
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="supermarket"
-            >
-              Supermarket (Separated by Line Break)
-            </label>
-            <textarea
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              rows="5"
-              cols="30"
-              id="supermarket"
-              ref={supermarketInputRef}
-            ></textarea>
             <div className="inline-flex mt-4">
               <label
                 className="block text-gray-700 text-sm mr-2 font-bold mb-2"
                 htmlFor="nutritional-value"
               >
-                Nutritional <br />
-                Value
+                Products
               </label>
               <div className="relative">
                 <select
                   className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                   name="nutritional-value"
                   id="nutritional-value"
-                  ref={nutritionalValueInputRef}
+                  ref={productsInputRef}
                 >
-                  {nutritionalValueList &&
-                    nutritionalValueList.map((nv) => {
+                  {productsList &&
+                    productsList.map((product) => {
+                      return (
+                        <option key={product.name} value={product.name}>
+                          {product.name}
+                        </option>
+                      );
+                    })}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                  <svg
+                    className="fill-current h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                  </svg>
+                </div>
+              </div>
+              <label
+                className="block text-gray-700 text-sm mr-2 font-bold mb-2"
+                htmlFor="nutritional-value"
+              >
+                Units
+              </label>
+              <div className="relative">
+                <select
+                  className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  name="nutritional-value"
+                  id="nutritional-value"
+                  ref={unitsInputRef}
+                >
+                  {unitsList &&
+                    unitsList.map((unit) => {
                       return (
                         <option
-                          key={nv.name}
-                          value={nv.name + "," + nv.unit + "," + quantity}
+                          key={unit.shortname}
+                          value={unit.shortname + "," + quantity}
                         >
-                          {nv.name}
+                          {unit.shortname}
                         </option>
                       );
                     })}
@@ -187,7 +183,7 @@ const Products = () => {
                   setQuantity(quantityInputRef.current.value);
                 }}
               />
-              <button onClick={addNutritionalValue}>
+              <button onClick={addProducts}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="border-2 border-green-400 rounded h-6 w-10"
@@ -205,14 +201,14 @@ const Products = () => {
               </button>
             </div>
             <ul className="">
-              {nutritionalValue &&
-                nutritionalValue.map((nv, index) => {
+              {products &&
+                products.map((product, index) => {
                   return (
                     <li
                       className="inline-grid grid-cols-2 bg-blue-100 border border-blue-400 text-blue-700 rounded relative w-max mt-2 mr-1"
-                      key={nv.name}
+                      key={product.name}
                     >
-                      {nv.toString()}
+                      {product.toString()}
                       <button
                         className="flex ml-5 justify-end"
                         type="button"
@@ -255,21 +251,14 @@ const Products = () => {
     <div>
       {modal(isModalVisible)}
       <Table
-        tableHeaders={[
-          "name",
-          "description",
-          "supermarket",
-          "nutritional value",
-          "units",
-          "quantity",
-        ]}
+        tableHeaders={["name", "products", "units", "quantity"]}
         addRow={showModal}
-        data={products}
-        deleteRow={deleteProducts}
-        products={true}
+        data={recipes}
+        deleteRow={deleteRecipes}
+        recipes={true}
       />
     </div>
   );
 };
 
-export default Products;
+export default Recipes;

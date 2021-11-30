@@ -61,6 +61,15 @@ const MainNavigation = () => {
             </NavLink>
           )}
           {isLoggedIn && (
+            <NavLink
+              activeClassName="border-blue-500"
+              className="text-gray-800 dark:text-gray-200 border-b-2 mx-1.5 sm:mx-6"
+              to="/recipes"
+            >
+              Recipe
+            </NavLink>
+          )}
+          {isLoggedIn && (
             <button
               className="text-gray-800 dark:text-gray-200 border-b-2 mx-1.5 sm:mx-6"
               onClick={logoutHandler}
