@@ -1,4 +1,6 @@
-const apiBaseUrl = "http://localhost:5000/";
+const apiBaseUrl = process.env.REACT_APP_URL_SERVER
+  ? process.env.REACT_APP_URL_SERVER
+  : "https://xuzn6mlcb3.execute-api.eu-west-3.amazonaws.com/DEV/";
 
 const token = localStorage.getItem("token");
 
