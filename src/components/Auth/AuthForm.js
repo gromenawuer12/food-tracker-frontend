@@ -14,6 +14,10 @@ const AuthForm = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const URL = process.env.REACT_APP_URL_SERVER
+    ? process.env.REACT_APP_URL_SERVER + "users/login"
+    : "https://xuzn6mlcb3.execute-api.eu-west-3.amazonaws.com/DEV/users/login";
+
   const submitHandler = (event) => {
     event.preventDefault();
 
@@ -23,7 +27,7 @@ const AuthForm = () => {
 
     setIsLoading(true);
 
-    fetch("http://localhost:5000/users/login", {
+    fetch(URL, {
       method: "POST",
       headers: new Headers({
         Authorization:
