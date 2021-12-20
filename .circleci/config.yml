@@ -24,10 +24,16 @@ jobs:
       - run: CI=false npm run build
       - store_artifacts:
           path: /home/circleci/.npm/_logs/
+      - persist_to_workspace:
+          root: /tmp/workspace
+          paths:
+            - build/*
   deploy:
     docker:
       - image: 'cimg/python:3.6'
     steps:
+      - attach_workspace:
+          at: /tmp/workspace
       - run: ls -la
       - aws/sync:
           from: 'build'
