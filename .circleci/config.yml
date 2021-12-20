@@ -28,8 +28,9 @@ jobs:
     docker:
       - image: 'cimg/python:3.6'
     steps:
+      - run: ls -la
       - aws/sync:
-          from: 'build/'
+          from: 'build'
           to: 's3://spa-application-s3'
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
