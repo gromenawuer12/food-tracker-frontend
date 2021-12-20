@@ -21,7 +21,7 @@ jobs:
       - node/install-packages:
           cache-path: ~/project/node_modules
           override-ci-command: npm install
-      - run: npm run build
+      - run: CI=false npm run build
       - store_artifacts:
           path: /home/circleci/.npm/_logs/
   deploy:
