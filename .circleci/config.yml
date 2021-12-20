@@ -53,6 +53,3 @@ workflows:
             - build
           context:
             - aws
-          filters:
-            branches:
-              only: master
