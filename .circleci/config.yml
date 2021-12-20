@@ -25,7 +25,7 @@ jobs:
       - store_artifacts:
           path: /home/circleci/.npm/_logs/
       - persist_to_workspace:
-          root: /tmp/workspace
+          root: ~/
           paths:
             - build/*
   deploy:
@@ -33,7 +33,7 @@ jobs:
       - image: 'cimg/python:3.6'
     steps:
       - attach_workspace:
-          at: /tmp/workspace
+          at: ~/
       - run: ls -la
       - aws/sync:
           from: 'build'
