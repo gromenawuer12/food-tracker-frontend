@@ -44,6 +44,27 @@ const Table = (props) => {
                     return productsFix(dt["products"], 2);
                   }
                 }
+                if (props.menus) {
+                  if (th === "recipes") {
+                    return productSupermarketFix(dt[th]);
+                  }
+                  if (th === "nutritional value") {
+                    const aux = dt["nutritional_value"]
+                      ? Object.entries(dt["nutritional_value"])
+                      : [];
+                    return productSupermarketFix(aux);
+                  }
+                  if (th === "user") {
+                    return (
+                      <td
+                        key={dt["PK"].substring(6, dt["PK"].length)}
+                        className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+                      >
+                        {dt["PK"].substring(5, dt["PK"].length)}
+                      </td>
+                    );
+                  }
+                }
                 return (
                   <td
                     key={dt[th]}
@@ -54,25 +75,48 @@ const Table = (props) => {
                 );
               })}
               <td className="rounded-tr-lg px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                <button
-                  className=""
-                  onClick={() => props.deleteRow(dt[tableHeaders[0]])}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-10"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="red"
+                {props.menus && !dt["isLocked"] && (
+                  <button
+                    className=""
+                    onClick={() => props.deleteRow(dt[tableHeaders[0]])}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                    />
-                  </svg>
-                </button>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-10"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="red"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      />
+                    </svg>
+                  </button>
+                )}
+                {!props.menus && (
+                  <button
+                    className=""
+                    onClick={() => props.deleteRow(dt[tableHeaders[0]])}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-10"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="red"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      />
+                    </svg>
+                  </button>
+                )}
               </td>
             </tr>
           );

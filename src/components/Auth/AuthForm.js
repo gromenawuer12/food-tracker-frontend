@@ -48,7 +48,12 @@ const AuthForm = () => {
         }
       })
       .then((data) => {
-        authCtx.login(data.token);
+        let minutesToAdd = 30;
+        let currentDate = new Date();
+        let expirationTime = new Date(
+          currentDate.getTime() + minutesToAdd * 60000
+        );
+        authCtx.login(data.token, expirationTime.toISOString(), data.user);
         history.replace("/");
       })
       .catch((err) => {

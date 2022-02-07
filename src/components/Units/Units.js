@@ -1,24 +1,18 @@
-/* eslint-disable */
 import { useState, useRef } from "react";
 import Modal from "../UI/Modal";
 import Table from "../UI/Table";
-import { useUnits, deleteUnit, addUnit } from "../../hooks/use-units";
+import { useData } from "../../hooks/use-data";
 
 const Units = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isUpdated, setIsUpdated] = useState(false);
-  const units = useUnits(isUpdated);
+  const {
+    data: units,
+    deleteData: deleteUnit,
+    addData: addUnits,
+  } = useData("units/");
 
   const shortnameInputRef = useRef();
   const nameInputRef = useRef();
-
-  const addUnits = async (unit) => {
-    addUnit(unit).then(() => setIsUpdated(!isUpdated));
-  };
-
-  const deleteUnits = async (shortname) => {
-    deleteUnit({ shortname: shortname }).then(() => setIsUpdated(!isUpdated));
-  };
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -26,6 +20,10 @@ const Units = () => {
 
   const hideModal = () => {
     setIsModalVisible(false);
+  };
+
+  const deleteUnits = (shortname) => {
+    deleteUnit({ shortname: shortname });
   };
 
   const addHandler = (event) => {
