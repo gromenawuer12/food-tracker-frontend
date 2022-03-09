@@ -16,8 +16,8 @@
     "web-vitals": "^1.1.2"
   },
   "scripts": {
-    "start": "craco --openssl-legacy-provider start",
-    "build": "craco --openssl-legacy-provider build",
+    "start": "craco start",
+    "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
     "deploy": "aws s3 sync build/ s3://spa-application-s3"
