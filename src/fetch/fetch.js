@@ -2,9 +2,7 @@ const apiBaseUrl = process.env.REACT_APP_URL_SERVER
   ? process.env.REACT_APP_URL_SERVER
   : "https://xuzn6mlcb3.execute-api.eu-west-3.amazonaws.com/DEV/";
 
-const token = localStorage.getItem("token");
-
-const METHOD = (url, body, method) => {
+const METHOD = (url, body, method, token) => {
   return fetch(apiBaseUrl + url, {
     method: method,
     headers: {
@@ -15,16 +13,23 @@ const METHOD = (url, body, method) => {
   });
 };
 
-export const GET = (url) => {
-  return fetch(apiBaseUrl + url, {
+export const GET = async (url, token) => {
+  const response = await fetch(apiBaseUrl + url, {
     headers: { Authorization: "access_token " + token },
   });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Could not fetch quotes.");
+  }
+  return data;
 };
 
-export const POST = (url, body) => {
-  return METHOD(url, body, "POST");
+export const POST = (url, body, token) => {
+  return METHOD(url, body, "POST", token);
 };
 
-export const DELETE = (url, body) => {
-  return METHOD(url, body, "DELETE");
+export const DELETE = (url, body, token) => {
+  return METHOD(url, body, "DELETE", token);
 };

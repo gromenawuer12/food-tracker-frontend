@@ -6,8 +6,10 @@ import UnitsPage from "./pages/UnitsPage";
 import NutritionalValuePage from "./pages/NutritionalValuePage";
 import ProductsPage from "./pages/ProductsPage";
 import RecipesPage from "./pages/RecipesPage";
+import MenusPage from "./pages/MenusPage";
 import AuthPage from "./pages/AuthPage";
 import HomePage from "./pages/HomePage";
+import ChartsPage from "./pages/ChartsPage";
 import AuthContext from "./store/auth-context";
 
 function App() {
@@ -16,9 +18,16 @@ function App() {
   return (
     <Layout>
       <Switch>
-        <Route path="/" exact>
-          <HomePage />
-        </Route>
+        {!authCtx.isLoggedIn && (
+          <Route path="/" exact>
+            <HomePage />
+          </Route>
+        )}
+        {authCtx.isLoggedIn && (
+          <Route path="/" exact>
+            <ChartsPage />
+          </Route>
+        )}
         {!authCtx.isLoggedIn && (
           <Route path="/auth">
             <AuthPage />
@@ -42,6 +51,11 @@ function App() {
         {authCtx.isLoggedIn && (
           <Route path="/recipes">
             <RecipesPage />
+          </Route>
+        )}
+        {authCtx.isLoggedIn && (
+          <Route path="/menus">
+            <MenusPage />
           </Route>
         )}
         <Route path="*">

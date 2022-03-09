@@ -1,21 +1,20 @@
 import { useState, useRef } from "react";
-import {
-  useProducts,
-  addProduct,
-  deleteProduct,
-} from "../../hooks/use-products";
-import { useNutritionalValue } from "../../hooks/use-nutritional-value";
+import { useData } from "../../hooks/use-data";
 import Modal from "../UI/Modal";
 import Table from "../UI/Table";
 
 const Products = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isUpdated, setIsUpdated] = useState(false);
   const [quantity, setQuantity] = useState(0);
   const [nutritionalValue, setNutritionalValue] = useState([]);
 
-  const products = useProducts(isUpdated);
-  const nutritionalValueList = useNutritionalValue(true);
+  const {
+    data: products,
+    deleteData: deleteProduct,
+    addData: addProducts,
+  } = useData("products/");
+
+  const { data: nutritionalValueList } = useData("nutritional_value/");
 
   const descriptionInputRef = useRef();
   const nameInputRef = useRef();
@@ -23,12 +22,8 @@ const Products = () => {
   const nutritionalValueInputRef = useRef();
   const quantityInputRef = useRef();
 
-  const addProducts = async (product) => {
-    addProduct(product).then(() => setIsUpdated(!isUpdated));
-  };
-
-  const deleteProducts = async (name) => {
-    deleteProduct({ name: name }).then(() => setIsUpdated(!isUpdated));
+  const deleteProducts = (name) => {
+    deleteProduct({ name: name });
   };
 
   const showModal = () => {

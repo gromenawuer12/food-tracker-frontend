@@ -1,14 +1,11 @@
 import { useState, useRef } from "react";
 import Modal from "../UI/Modal";
 import Table from "../UI/Table";
-import { useRecipes, addRecipe, deleteRecipe } from "../../hooks/use-recipes";
-import { useProducts } from "../../hooks/use-products";
-import { useUnits } from "../../hooks/use-units";
+import { useData } from "../../hooks/use-data";
 
 const Recipes = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [products, setProducts] = useState([]);
-  const [isUpdated, setIsUpdated] = useState(false);
   const [quantity, setQuantity] = useState(0);
 
   const nameInputRef = useRef();
@@ -16,16 +13,16 @@ const Recipes = () => {
   const quantityInputRef = useRef();
   const unitsInputRef = useRef();
 
-  const recipes = useRecipes(isUpdated);
-  const productsList = useProducts(true);
-  const unitsList = useUnits(true);
+  const {
+    data: recipes,
+    deleteData: deleteRecipe,
+    addData: addRecipes,
+  } = useData("recipes/");
+  const { data: productsList } = useData("products/");
+  const { data: unitsList } = useData("units/");
 
-  const addRecipes = async (recipe) => {
-    addRecipe(recipe).then(() => setIsUpdated(!isUpdated));
-  };
-
-  const deleteRecipes = async (name) => {
-    deleteRecipe({ name: name }).then(() => setIsUpdated(!isUpdated));
+  const deleteRecipes = (name) => {
+    deleteRecipe({ name: name });
   };
 
   const showModal = () => {

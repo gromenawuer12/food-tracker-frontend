@@ -1,33 +1,22 @@
 import { useState, useRef } from "react";
 import Modal from "../UI/Modal";
 import Table from "../UI/Table";
-import {
-  useNutritionalValue,
-  deleteNutritionalValue,
-  addNutritionalValue,
-} from "../../hooks/use-nutritional-value";
-import { useUnits } from "../../hooks/use-units";
+import { useData } from "../../hooks/use-data";
 
 const NutritionalValue = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isUpdated, setIsUpdated] = useState(false);
 
-  const nutritionalValue = useNutritionalValue(isUpdated);
-  const units = useUnits(true);
+  const {
+    data: nutritionalValue,
+    deleteData: deleteNutritionalValues,
+    addData: addNutritionalValues,
+  } = useData("nutritional_value/");
+
+  const { data: units } = useData("units/");
 
   const shortnameInputRef = useRef();
   const nameInputRef = useRef();
   const unitsInputRef = useRef();
-
-  const addNutritionalValues = async (nutritionalValue) => {
-    addNutritionalValue(nutritionalValue).then(() => setIsUpdated(!isUpdated));
-  };
-
-  const deleteNutritionalValues = async (shortname) => {
-    deleteNutritionalValue({ shortname: shortname }).then(() =>
-      setIsUpdated(!isUpdated)
-    );
-  };
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -35,6 +24,10 @@ const NutritionalValue = () => {
 
   const hideModal = () => {
     setIsModalVisible(false);
+  };
+
+  const deleteNutritionalValue = (shortname) => {
+    deleteNutritionalValues({ shortname: shortname });
   };
 
   const addHandler = (event) => {
@@ -161,7 +154,7 @@ const NutritionalValue = () => {
         tableHeaders={["shortname", "name", "unit"]}
         addRow={showModal}
         data={nutritionalValue}
-        deleteRow={deleteNutritionalValues}
+        deleteRow={deleteNutritionalValue}
       />
     </div>
   );
