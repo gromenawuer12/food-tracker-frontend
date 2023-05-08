@@ -15,13 +15,14 @@ const Menus = () => {
 
   const { data: recipesList } = useData("recipes/");
 
-  console.log(recipesList);
-
-  let today = new Date();
-  let first = today.getDate() - today.getDay() + 1;
-  let last = first + 6;
-  let lastDayWeek = new Date(today.setDate(last)).toISOString().split("T")[0];
-  let firstDayWeek = new Date(today.setDate(first)).toISOString().split("T")[0];
+  let date = new Date();
+  let day = date.getDay();
+  let diff = date.getDate() - day + (day === 0 ? -6 : 1);
+  const first = new Date(date.setDate(diff));
+  let last = new Date(first);
+  last.setDate(last.getDate() + 6);
+  let firstDayWeek = first.toISOString().split("T")[0];
+  let lastDayWeek = last.toISOString().split("T")[0];
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [userFilter, setUserFilter] = useState(authCtx.user);
@@ -134,7 +135,6 @@ const Menus = () => {
             </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              type="test"
               id="user"
               ref={userInputRef}
             />

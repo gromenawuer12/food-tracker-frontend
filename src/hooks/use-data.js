@@ -20,7 +20,7 @@ const useData = (URL) => {
       setIsLoading(true);
       try {
         const data = await GET(URL, authCtx.token);
-        setData(data);
+        setData(JSON.parse(data));
       } catch (error) {
         setIsError(error);
       }
