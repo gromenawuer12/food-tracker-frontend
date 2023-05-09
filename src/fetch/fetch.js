@@ -3,14 +3,6 @@ const apiBaseUrl = process.env.REACT_APP_URL_SERVER
   : "https://xuzn6mlcb3.execute-api.eu-west-3.amazonaws.com/DEV/";
 
 const METHOD = (url, body, method, token) => {
- console.log({
-                  method: method,
-                  headers: {
-                    Authorization: "access_token " + token,
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify(body),
-                });
   return fetch(apiBaseUrl + url, {
     method: method,
     headers: {
@@ -22,6 +14,7 @@ const METHOD = (url, body, method, token) => {
 };
 
 export const GET = async (url, token) => {
+  console.log("GET", url);
   const response = await fetch(apiBaseUrl + url, {
     headers: { Authorization: "access_token " + token },
   });

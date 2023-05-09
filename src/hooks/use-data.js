@@ -6,8 +6,8 @@ const error = () => {
   console.log("Something went wrong!");
 };
 
-const useData = (URL) => {
-  const [isUpdated, setIsUpdated] = useState(false);
+const useData = (URL, forceState = false) => {
+  const [isUpdated, setIsUpdated] = useState(forceState);
   const [data, setData] = useState([]);
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -20,7 +20,7 @@ const useData = (URL) => {
       setIsLoading(true);
       try {
         const data = await GET(URL, authCtx.token);
-        setData(JSON.parse(data));
+        setData(data);
       } catch (error) {
         setIsError(error);
       }
@@ -43,7 +43,14 @@ const useData = (URL) => {
     return response;
   };
 
-  return { data, isError, isLoading, deleteData, addData };
+  return {
+    data,
+    isError,
+    isLoading,
+    deleteData,
+    addData,
+    setIsUpdated,
+  };
 };
 
 export { useData };

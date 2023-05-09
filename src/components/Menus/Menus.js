@@ -7,13 +7,8 @@ import AuthContext from "../../store/auth-context";
 const Menus = () => {
   const authCtx = useContext(AuthContext);
 
-  const {
-    data: menus,
-    deleteData: deleteMenus,
-    addData: addMenus,
-  } = useData("menus/");
-
   const { data: recipesList } = useData("recipes/");
+  const { data: usersList } = useData("users/");
 
   let date = new Date();
   let day = date.getDay();
@@ -37,17 +32,32 @@ const Menus = () => {
   const firstDateFilterInputRef = useRef();
   const lastDateFilterInputRef = useRef();
 
-  const filteredMenus =
-    userFilter !== ""
-      ? menus.filter(
-          (elem) =>
-            elem.date >= firstDayFilter &&
-            elem.date <= lastDayFilter &&
-            elem.PK === "menu#" + userFilter
-        )
-      : menus.filter(
-          (elem) => elem.date >= firstDayFilter && elem.date <= lastDayFilter
-        );
+  const {
+    data: menus,
+    deleteData: deleteMenus,
+    addData: addMenus,
+    setIsUpdated: setIsUpdatedMenus,
+  } = useData(
+    `menus?user=${
+      userFilterInputRef.current ? userFilterInputRef.current.value : userFilter
+    }&from=${
+      firstDateFilterInputRef.current
+        ? firstDateFilterInputRef.current.value
+        : firstDayWeek
+    }&to=${
+      lastDateFilterInputRef.current
+        ? lastDateFilterInputRef.current.value
+        : lastDayWeek
+    }/`
+  );
+
+  const menusFilterHandler = (event) => {
+    event.preventDefault();
+    setUserFilter(userFilterInputRef.current.value ?? null);
+    setFirstDayFilter(firstDateFilterInputRef.current.value ?? null);
+    setLastDayFilter(lastDateFilterInputRef.current.value ?? null);
+    setIsUpdatedMenus(false);
+  };
 
   const deleteMenu = (date) => {
     deleteMenus({ date: date });
@@ -133,11 +143,20 @@ const Menus = () => {
             >
               User
             </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            <select
+              className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
               id="user"
               ref={userInputRef}
-            />
+            >
+              {usersList &&
+                usersList.map((user) => {
+                  return (
+                    <option key={user.username} value={user.username}>
+                      {user.username}
+                    </option>
+                  );
+                })}
+            </select>
             <label
               className="block text-gray-700 text-sm mr-2 font-bold mb-2"
               htmlFor="nutritional-value"
@@ -237,38 +256,40 @@ const Menus = () => {
     <div>
       {modal(isModalVisible)}
       <div className="flex justify-center mt-2">
-        <input
+        <select
           className="border border-black rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          type="text"
           ref={userFilterInputRef}
           value={userFilter}
-          onChange={() => {
-            setUserFilter(userFilterInputRef.current.value);
-          }}
-        ></input>
+          onChange={menusFilterHandler}
+        >
+          {usersList &&
+            usersList.map((user) => {
+              return (
+                <option key={user.username} value={user.username}>
+                  {user.username}
+                </option>
+              );
+            })}
+        </select>
         <input
           className="border border-black rounded"
           type="date"
           value={firstDayFilter}
           ref={firstDateFilterInputRef}
-          onChange={() => {
-            setFirstDayFilter(firstDateFilterInputRef.current.value);
-          }}
+          onChange={menusFilterHandler}
         ></input>
         <input
           className="border border-black rounded"
           type="date"
           value={lastDayFilter}
           ref={lastDateFilterInputRef}
-          onChange={() => {
-            setLastDayFilter(lastDateFilterInputRef.current.value);
-          }}
+          onChange={menusFilterHandler}
         ></input>
       </div>
       <Table
         tableHeaders={["date", "user", "recipes", "nutritional value"]}
         addRow={showModal}
-        data={filteredMenus}
+        data={menus}
         deleteRow={deleteMenu}
         menus={true}
       />
